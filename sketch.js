@@ -1,9 +1,12 @@
 /*
 
-The Game Project 6 - Adding Game Mechanics
+- Copy your game project code into this file
+- for the p5.Sound library look here https://p5js.org/reference/#/libraries/p5.sound
+- for finding cool sounds perhaps look here
+https://freesound.org/
+
 
 */
-
 
 // VARIABLE DECLARATION //
 var gameChar_x;
@@ -33,13 +36,33 @@ var Lives;
 var isDead;
 
 
+var jumpSound;
+var collectableSound;
+var deadSound;
+
+function preload()
+{
+    soundFormats('mp3','wav');
+    
+    //load your sounds here
+    jumpSound = loadSound('assets/jump.wav');
+    jumpSound.setVolume(0.1);
+    collectableSound = loadSound('assets/collectable.wav');
+    collectableSound.setVolume(0.1);
+    deadSound = loadSound('assets/dead.mp3');
+    deadSound.setVolume(0.1);
+
+}
+
+
 function setup()
 {
-	createCanvas(1024, 576);
-	floorPos_y = height * 3/4;
+    createCanvas(1024, 576);
+    floorPos_y = height * 3/4;
 	Lives = 3;
 	startGame();
-}	
+
+}
 
 function draw()
 {
@@ -229,7 +252,8 @@ function keyReleased()
 
 	if(keyCode == 32)
 	{
-		isFalling = true;
+        isFalling = true;
+        jumpSound.play();
 	}
 
 	console.log(game_score);
@@ -475,8 +499,8 @@ function checkCollectable(t_collectable)
 
 	if(distance <= t_collectable.size)
 	{
+        collectableSound.play();
 		t_collectable.isFound = true;
-		console.log("Triggered")
 		game_score += 1;
 	}
 }
@@ -547,13 +571,14 @@ function checkPlayerDie()
 {
 	if(gameChar_y > width)
 	{
-		isDead = true;
+        deadSound.play();
+        isDead = true;
 		Lives -= 1;
 		
 		if(Lives > 0)
 		{
 			startGame();
-		}
+        }
 	}
 
 	
@@ -616,4 +641,3 @@ function startGame()
 				isReached: false
 			}
 }
-
